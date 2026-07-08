@@ -9,6 +9,7 @@ import Terminal from './Components/Menu/Terminal.jsx'
 import Challenges from './Components/Menu/Challenges.jsx'
 import Analytics from './Components/Menu/Analytics.jsx'
 import NotFound from './NotFound.jsx'
+import Settings from './Components/Menu/Settings.jsx'
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path:'analytics',
         element:<Analytics/>
+      },
+      {
+        path:'settings',
+        element:<Settings/>
       },
       {
         path:'*',

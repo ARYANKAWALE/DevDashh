@@ -1,4 +1,4 @@
-import { PanelsTopLeft,ChartNoAxesCombined,Brain, SquareTerminal } from 'lucide-react'
+import { PanelsTopLeft, ChartNoAxesCombined, Brain, SquareTerminal, Settings } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 const navItems = [
@@ -6,6 +6,7 @@ const navItems = [
   { to: '/analytics', end: false, icon: ChartNoAxesCombined,  label: 'Analytics'  },
   { to: '/challenges',end: false, icon: Brain,                label: 'Challenges' },
   { to: '/terminal',  end: false, icon: SquareTerminal,       label: 'Terminal'   },
+  { to: '/settings',  end: false, icon: Settings,             label: 'Settings'   },
 ]
 
 function Sidebar() {
