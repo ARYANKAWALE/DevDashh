@@ -27,6 +27,70 @@ function Badge({ type, children }) {
   );
 }
 
+/* ─── Weekly activity bar chart ─── */
+function WeeklyChart({ submissionCalendar }) {
+  const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
+  // Build an array of {day, count} for the last 7 days (Mon→Sun of current week)
+  const bars = React.useMemo(() => {
+    const cal = submissionCalendar ?? {};
+    // anchor to "this week" Mon–Sun
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0=Sun
+    // shift so week starts Monday: Mon=0 … Sun=6
+    const mondayOffset = (dayOfWeek + 6) % 7;
+
+    return DAYS.map((label, i) => {
+      const d = new Date(now);
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - mondayOffset + i);
+      const ts = Math.floor(d.getTime() / 1000).toString();
+      return { label, count: cal[ts] ?? 0 };
+    });
+  }, [submissionCalendar]);
+
+  const maxCount = Math.max(...bars.map((b) => b.count), 1);
+
+  return (
+    <div
+      style={{ background: "#161b22", borderRadius: 12 }}
+      className="p-3 mt-1"
+    >
+      <p className="text-[10px] font-semibold text-emerald-400 mb-2 tracking-wider uppercase">
+        This week
+      </p>
+      <div className="flex items-end gap-1.5" style={{ height: 56 }}>
+        {bars.map(({ label, count }) => {
+          const heightPct = Math.max((count / maxCount) * 100, count > 0 ? 12 : 6);
+          // brighter green for the tallest bar
+          const isMax = count === maxCount && count > 0;
+          return (
+            <div key={label} className="flex flex-col items-center flex-1 gap-1">
+              <div
+                className="w-full rounded-sm transition-all duration-500"
+                style={{
+                  height: `${heightPct}%`,
+                  background: isMax
+                    ? "#39d353"
+                    : count > 0
+                    ? "#26a641"
+                    : "#21262d",
+                  minHeight: 3,
+                }}
+              />
+              <span
+                style={{ fontSize: 8, color: "#8b949e", letterSpacing: "0.05em" }}
+              >
+                {label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function UserCard({ user, onRemove }) {
   const rank = user.ranking
     ? `#${Number(user.ranking).toLocaleString()}`
@@ -97,6 +161,11 @@ function UserCard({ user, onRemove }) {
             {Number(user.acceptanceRate).toFixed(1)}%
           </span>
         </p>
+      )}
+
+      {/* weekly activity chart */}
+      {user.submissionCalendar && (
+        <WeeklyChart submissionCalendar={user.submissionCalendar} />
       )}
     </div>
   );
