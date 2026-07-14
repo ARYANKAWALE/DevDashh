@@ -5,16 +5,16 @@ import Sidebar from "./Components/Sidebar"
 
 function Layout() {
   return (
-    <>
-      <Navigation/>
-      <div className="flex h-[calc(100vh-5rem)]">
-        <Sidebar/>
-        <main className="flex-1">
-          <Outlet/>
+    <div className="flex flex-col h-screen overflow-hidden bg-[#090a0f]">
+      <Navigation />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+        <main className="flex-1 h-full overflow-y-auto">
+          <Outlet />
         </main>
       </div>
-      <Footer/>
-    </>
+      <Footer />
+    </div>
   )
 }
 

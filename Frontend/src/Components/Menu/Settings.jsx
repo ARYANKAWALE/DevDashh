@@ -34,19 +34,22 @@ function WeeklyChart({ submissionCalendar }) {
   // Build an array of {day, count} for the last 7 days (Mon→Sun of current week)
   const bars = React.useMemo(() => {
     const cal = submissionCalendar ?? {};
-    // anchor to "this week" Mon–Sun
+    const result = [];
     const now = new Date();
-    const dayOfWeek = now.getDay(); // 0=Sun
-    // shift so week starts Monday: Mon=0 … Sun=6
-    const mondayOffset = (dayOfWeek + 6) % 7;
+    const DAYS_SHORT = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-    return DAYS.map((label, i) => {
+    for (let i = 6; i >= 0; i--) {
       const d = new Date(now);
-      d.setHours(0, 0, 0, 0);
-      d.setDate(d.getDate() - mondayOffset + i);
-      const ts = Math.floor(d.getTime() / 1000).toString();
-      return { label, count: cal[ts] ?? 0 };
-    });
+      d.setDate(now.getDate() - i);
+      const label = DAYS_SHORT[d.getDay()];
+
+      const utcMidnight = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+      const ts = Math.floor(utcMidnight / 1000).toString();
+      const count = cal[ts] ? Number(cal[ts]) : 0;
+
+      result.push({ label, count });
+    }
+    return result;
   }, [submissionCalendar]);
 
   const maxCount = Math.max(...bars.map((b) => b.count), 1);
@@ -102,7 +105,7 @@ function UserCard({ user, onRemove }) {
   return (
     <div
       className="group relative flex flex-col gap-4 p-5 rounded-2xl border
-                 bg-[--color-surface-container-low] border-[--color-separator]
+                 bg-[#0f111a] border-white/5
                  shadow-sm hover:shadow-md transition-all duration-200"
     >
       {/* avatar + handle */}
@@ -114,10 +117,10 @@ function UserCard({ user, onRemove }) {
           {user.username[0].toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-[--color-on-surface] truncate">
+          <p className="font-semibold text-white truncate">
             {user.username}
           </p>
-          <p className="text-xs text-[--color-outline]">
+          <p className="text-xs text-gray-400">
             Global rank&nbsp;{rank}
           </p>
         </div>
@@ -133,11 +136,11 @@ function UserCard({ user, onRemove }) {
 
       {/* progress bar */}
       <div>
-        <div className="flex justify-between text-xs text-[--color-outline] mb-1">
+        <div className="flex justify-between text-xs text-gray-400 mb-1">
           <span>Problems solved</span>
           <span>{pct}%</span>
         </div>
-        <div className="h-2 rounded-full bg-[--color-surface-dim] overflow-hidden">
+        <div className="h-2 rounded-full bg-white/5 overflow-hidden">
           <div
             className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-700"
             style={{ width: `${pct}%` }}
@@ -155,9 +158,9 @@ function UserCard({ user, onRemove }) {
 
       {/* acceptance rate */}
       {user.acceptanceRate != null && (
-        <p className="text-xs text-[--color-outline]">
+        <p className="text-xs text-gray-400">
           Acceptance rate&nbsp;
-          <span className="font-medium text-[--color-on-surface]">
+          <span className="font-medium text-white">
             {Number(user.acceptanceRate).toFixed(1)}%
           </span>
         </p>
@@ -256,18 +259,18 @@ export default function Settings() {
           <div className="p-2 rounded-xl bg-indigo-100 dark:bg-indigo-900/40">
             <Code2 size={20} className="text-indigo-600 dark:text-indigo-400" />
           </div>
-          <h1 className="text-2xl font-bold text-[--color-on-surface] tracking-tight">
+          <h1 className="text-2xl font-bold text-white tracking-tight">
             LeetCode Settings
           </h1>
         </div>
-        <p className="text-sm text-[--color-outline] ml-12">
+        <p className="text-sm text-gray-400 ml-12">
           Add usernames to track progress across your dashboard.
         </p>
       </div>
 
       {/* ── Add username card ── */}
-      <div className="rounded-2xl border bg-[--color-surface-container-low] border-[--color-separator] p-6 mb-8 shadow-sm">
-        <h2 className="font-semibold text-[--color-on-surface] mb-4 flex items-center gap-2">
+      <div className="rounded-2xl border bg-[#0f111a] border-white/5 p-6 mb-8 shadow-sm">
+        <h2 className="font-semibold text-white mb-4 flex items-center gap-2">
           <User size={16} className="text-indigo-500" />
           Add a LeetCode Username
         </h2>
@@ -276,17 +279,17 @@ export default function Settings() {
           <div className="relative flex-1">
             <User
               size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[--color-outline] pointer-events-none"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
             />
             <input
               type="text"
               value={input}
               onChange={(e) => { setInput(e.target.value); setError(""); }}
               placeholder="e.g. neal_wu"
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-[--color-outline-variant]
-                         bg-[--color-surface-container] text-[--color-on-surface] text-sm
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-white/5
+                         bg-[#12151f] text-white text-sm
                          outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20
-                         transition-all placeholder:text-[--color-outline]"
+                         transition-all placeholder:text-gray-500"
             />
           </div>
           <button
@@ -323,7 +326,7 @@ export default function Settings() {
       {/* ── User cards ── */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-[--color-on-surface] flex items-center gap-2">
+          <h2 className="font-semibold text-white flex items-center gap-2">
             <CheckCircle2 size={16} className="text-indigo-500" />
             Tracked Users
             <span className="ml-1 px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40
@@ -342,14 +345,14 @@ export default function Settings() {
         </div>
 
         {loadingFetch && (
-          <div className="flex items-center justify-center gap-3 py-16 text-[--color-outline]">
+          <div className="flex items-center justify-center gap-3 py-16 text-gray-400">
             <Loader2 size={22} className="animate-spin text-indigo-500" />
             <span className="text-sm">Loading stats…</span>
           </div>
         )}
 
         {!loadingFetch && usernames.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 gap-3 text-[--color-outline]">
+          <div className="flex flex-col items-center justify-center py-16 gap-3 text-gray-400">
             <AlertCircle size={36} className="opacity-40" />
             <p className="text-sm">No users added yet. Add a username above to get started.</p>
           </div>
