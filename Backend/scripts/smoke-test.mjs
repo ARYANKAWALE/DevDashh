@@ -8,9 +8,13 @@
 import dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
-import { DB_NAME } from "../src/utils/constants.js";
+import { DB_NAME, PRODUCTION_API_URL } from "../src/utils/constants.js";
 
-const BASE = `http://localhost:${process.env.PORT || 4000}`;
+const BASE =
+  process.env.SMOKE_TEST_BASE ??
+  (process.env.NODE_ENV === "production"
+    ? PRODUCTION_API_URL
+    : `http://localhost:${process.env.PORT || 4000}`);
 const uname = `cursor_smoke_${Date.now().toString(36)}`;
 const email = `${uname}@example.com`;
 const pass = "smoke-test-pw-1";

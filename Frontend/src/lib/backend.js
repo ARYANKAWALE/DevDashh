@@ -3,7 +3,7 @@
  * Responses follow the ApiResponse shape: { statusCode, data, message, success }.
  */
 
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+import { API_BASE } from "./config.js";
 
 export function getToken() {
   return localStorage.getItem("userToken");

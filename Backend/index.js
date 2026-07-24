@@ -6,6 +6,7 @@ import cors from "cors";
 import { DBConnnet } from "./src/db/index.js";
 import userRouter from "./src/routes/user.routes.js";
 import { ApiError } from "./src/utils/ApiError.js";
+import { PRODUCTION_API_URL } from "./src/utils/constants.js";
 
 if (!process.env.ACCESS_TOKEN_SECRET) {
   // dev fallback so the API still runs; never rely on this in production
@@ -21,9 +22,28 @@ if (!process.env.ACCESS_TOKEN_EXPIRY) {
 
 const app = express();
 
+function allowedOrigins() {
+  const fromEnv = process.env.CORS_ORIGIN?.split(",").map((o) => o.trim()).filter(Boolean) ?? [];
+  return new Set([
+    "http://localhost:5173",
+    "http://localhost:5174",
+    PRODUCTION_API_URL,
+    ...fromEnv,
+  ]);
+}
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN?.split(",") ?? "http://localhost:5173",
+    origin(origin, callback) {
+      // curl, server-to-server, same-origin
+      if (!origin) return callback(null, true);
+      if (allowedOrigins().has(origin)) return callback(null, true);
+      // any localhost port while developing
+      if (process.env.NODE_ENV !== "production" && /^http:\/\/localhost:\d+$/.test(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error(`CORS blocked: ${origin}`));
+    },
   })
 );
 app.use(express.json({ limit: "32kb" }));
