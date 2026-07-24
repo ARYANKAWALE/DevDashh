@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { validateGitHub, validateLeetCode } from "../lib/api";
 import { connectGitHub, connectLeetCode } from "../lib/connections";
-import { getToken } from "../lib/backend";
 import { BrandMark, GitHubMark, LeetCodeMark, Spinner, Ticks } from "./ui/Primitives";
 
 /**
@@ -68,11 +67,6 @@ export function ConnectField({ platform, autoFocus = false, onConnected }) {
         </button>
       </div>
       {error && <p className="font-mono text-[11px] text-rose">{error}</p>}
-      {!getToken() && (
-        <p className="font-mono text-[10px] text-faint">
-          Sign in to save this profile to your account in the database.
-        </p>
-      )}
     </form>
   );
 }

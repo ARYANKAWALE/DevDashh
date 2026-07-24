@@ -11,9 +11,12 @@ if (!process.env.ACCESS_TOKEN_SECRET) {
   // dev fallback so the API still runs; never rely on this in production
   process.env.ACCESS_TOKEN_SECRET = "devdash-insecure-dev-secret";
   console.warn(
-    "[warn] ACCESS_TOKEN_SECRET is not set in .env — using an insecure dev fallback. " +
-      "See .env.example for required keys."
+    "[warn] ACCESS_TOKEN_SECRET is not set in .env — using an insecure dev fallback."
   );
+}
+
+if (!process.env.ACCESS_TOKEN_EXPIRY) {
+  process.env.ACCESS_TOKEN_EXPIRY = "5d";
 }
 
 const app = express();

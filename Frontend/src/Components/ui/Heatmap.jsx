@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const CELL = 11;
@@ -17,6 +17,7 @@ export function paletteColor(palette) {
  */
 export default function Heatmap({ cells, colorFor, tooltipFor }) {
   const [tip, setTip] = useState(null);
+  const rootRef = useRef(null);
 
   // column-major: pad the first column so rows align to weekday (Sun..Sat)
   const { columns, monthLabels } = useMemo(() => {
@@ -47,8 +48,20 @@ export default function Heatmap({ cells, colorFor, tooltipFor }) {
   const defaultTooltip = (cell) =>
     `${cell.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })} · ${cell.count}`;
 
+  function showTip(e, cell) {
+    const root = rootRef.current;
+    if (!root) return;
+    const cellRect = e.currentTarget.getBoundingClientRect();
+    const rootRect = root.getBoundingClientRect();
+    setTip({
+      text: (tooltipFor ?? defaultTooltip)(cell),
+      x: cellRect.left - rootRect.left + cellRect.width / 2,
+      y: cellRect.top - rootRect.top,
+    });
+  }
+
   return (
-    <div className="relative">
+    <div ref={rootRef} className="relative">
       {/* month row */}
       <div className="relative h-4 mb-1 ml-0">
         {monthLabels.map(({ ci, text }) => (
@@ -75,14 +88,7 @@ export default function Heatmap({ cells, colorFor, tooltipFor }) {
                     key={ri}
                     className="rounded-[2px] transition-transform duration-100 hover:scale-[1.35] hover:outline hover:outline-1 hover:outline-white/40"
                     style={{ width: CELL, height: CELL, background: colorFor(cell) }}
-                    onMouseEnter={(e) => {
-                      const r = e.currentTarget.getBoundingClientRect();
-                      setTip({
-                        text: (tooltipFor ?? defaultTooltip)(cell),
-                        x: r.left + r.width / 2,
-                        y: r.top,
-                      });
-                    }}
+                    onMouseEnter={(e) => showTip(e, cell)}
                     onMouseLeave={() => setTip(null)}
                   />
                 );
@@ -94,7 +100,7 @@ export default function Heatmap({ cells, colorFor, tooltipFor }) {
 
       {tip && (
         <div
-          className="fixed z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] px-2.5 py-1.5 bg-panel3 border border-line text-[11px] font-mono text-ink whitespace-nowrap pointer-events-none shadow-xl"
+          className="absolute z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] px-2.5 py-1.5 bg-panel3 border border-line text-[11px] font-mono text-ink whitespace-nowrap pointer-events-none shadow-xl"
           style={{ left: tip.x, top: tip.y }}
         >
           {tip.text}

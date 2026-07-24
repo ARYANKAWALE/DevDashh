@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import AuthShell, { Field, inputCls } from "./AuthShell";
 import { Spinner } from "../ui/Primitives";
@@ -8,6 +8,7 @@ import { getConnections, replaceConnections } from "../../lib/connections";
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ identifier: "", password: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +44,11 @@ export default function Login() {
       saveSession(accessToken, user);
       const merged = await mergeGuestConnectionsIntoAccount(user.connections, getConnections());
       replaceConnections(merged);
-      navigate("/");
+      const from =
+        location.state?.from && !["/login", "/register"].includes(location.state.from)
+          ? location.state.from
+          : "/";
+      navigate(from, { replace: true });
     } catch (err) {
       setErrors({ api: err.message });
     } finally {
@@ -131,14 +136,7 @@ export default function Login() {
           New here?{" "}
           <Link to="/register" className="text-accent hover:underline underline-offset-4">
             Create an account
-          </Link>{" "}
-          <span className="text-faint">
-            — or{" "}
-            <Link to="/" className="underline underline-offset-4 hover:text-mut transition-colors">
-              skip straight to the dashboard
-            </Link>
-            .
-          </span>
+          </Link>
         </p>
       </div>
     </AuthShell>

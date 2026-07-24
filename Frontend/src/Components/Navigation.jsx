@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { LogIn, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { BrandMark } from "./ui/Primitives";
-import { clearSession, getSessionUser, getToken } from "../lib/backend";
+import { clearSession, getSessionUser } from "../lib/backend";
 
 const PATH_NAMES = {
   "/": "overview",
@@ -21,7 +21,6 @@ function useUtcClock() {
 }
 
 function getUser() {
-  if (!getToken()) return null;
   return getSessionUser()?.username ?? null;
 }
 
@@ -59,7 +58,7 @@ export default function Navigation() {
             {clock} UTC
           </span>
           <span className="hidden sm:block w-px h-4 bg-line" />
-          {user ? (
+          {user && (
             <div className="flex items-center gap-2.5">
               <span
                 className="flex items-center justify-center w-7 h-7 rounded-full border border-line bg-panel2 font-mono text-[11px] uppercase text-accent select-none"
@@ -76,14 +75,6 @@ export default function Navigation() {
                 <span className="hidden sm:inline">exit</span>
               </button>
             </div>
-          ) : (
-            <Link
-              to="/login"
-              className="flex items-center gap-1.5 microlabel text-mut hover:text-ink transition-colors"
-            >
-              <LogIn size={12} />
-              sign in
-            </Link>
           )}
         </div>
       </div>
