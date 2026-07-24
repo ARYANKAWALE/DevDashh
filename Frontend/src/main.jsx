@@ -1,51 +1,36 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import { createBrowserRouter,RouterProvider } from 'react-router-dom'
-import Layout from './Layout.jsx'
-import Dashboard from './Components/Menu/Dashboard.jsx'
-import Terminal from './Components/Menu/Terminal.jsx'
-import Challenges from './Components/Menu/Challenges.jsx'
-import Analytics from './Components/Menu/Analytics.jsx'
-import NotFound from './NotFound.jsx'
-import Settings from './Components/Menu/Settings.jsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import Layout from "./Layout.jsx";
+import Overview from "./Components/Menu/Overview.jsx";
+import GitHubPage from "./Components/Menu/GitHub.jsx";
+import LeetCodePage from "./Components/Menu/LeetCode.jsx";
+import Connections from "./Components/Menu/Connections.jsx";
+import Login from "./Components/Authentication/Login.jsx";
+import Register from "./Components/Authentication/Register.jsx";
+import NotFound from "./NotFound.jsx";
+import RouteError from "./RouteError.jsx";
 
 const router = createBrowserRouter([
+  { path: "/login", element: <Login />, errorElement: <RouteError /> },
+  { path: "/register", element: <Register />, errorElement: <RouteError /> },
   {
-    path:'/',
-    element:<Layout/>,
-    children:[
-      {
-        path:'',
-        element:<Dashboard/>
-      },
-      {
-        path:'terminal',
-        element:<Terminal/>
-      },
-      {
-        path:'challenges',
-        element:<Challenges/>
-      },
-      {
-        path:'analytics',
-        element:<Analytics/>
-      },
-      {
-        path:'settings',
-        element:<Settings/>
-      },
-      {
-        path:'*',
-        element:<NotFound/>
-      }
-    ]
-  }
-])
+    path: "/",
+    element: <Layout />,
+    errorElement: <RouteError />,
+    children: [
+      { path: "", element: <Overview /> },
+      { path: "github", element: <GitHubPage /> },
+      { path: "leetcode", element: <LeetCodePage /> },
+      { path: "connections", element: <Connections /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
+]);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}/>
-  </StrictMode>,
-)
+    <RouterProvider router={router} />
+  </StrictMode>
+);

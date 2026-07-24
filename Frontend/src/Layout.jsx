@@ -1,21 +1,34 @@
-import Navigation from "./Components/Navigation"
-import Footer from "./Components/Footer"
-import { Outlet } from "react-router-dom"
-import Sidebar from "./Components/Sidebar"
+import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import Navigation from "./Components/Navigation";
+import Sidebar from "./Components/Sidebar";
+import { backendFetch, clearSession, getToken, saveSession } from "./lib/backend";
+import { replaceConnections } from "./lib/connections";
 
-function Layout() {
+export default function Layout() {
+  // signed-in users: the account on the backend is the source of truth
+  useEffect(() => {
+    if (!getToken()) return;
+    backendFetch("/api/v1/users/me", { auth: true })
+      .then(({ user }) => {
+        saveSession(getToken(), user);
+        replaceConnections(user.connections);
+      })
+      .catch((err) => {
+        if (err.status === 401) clearSession();
+        // backend unreachable — keep local connections and continue as before
+      });
+  }, []);
+
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#090a0f]">
-      <Navigation />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
-        <main className="flex-1 h-full overflow-y-auto">
+    <div className="flex h-screen w-full overflow-hidden bg-bg text-ink">
+      <Sidebar />
+      <div className="flex flex-col flex-1 min-w-0">
+        <Navigation />
+        <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
       </div>
-      <Footer />
     </div>
-  )
+  );
 }
-
-export default Layout
