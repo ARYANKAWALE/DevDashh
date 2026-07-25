@@ -126,7 +126,7 @@ export default function Overview() {
       <div className="flex flex-wrap items-end justify-between gap-4 anim-rise">
         <div className="flex flex-col gap-1.5">
           <span className="microlabel text-faint">{today}</span>
-          <h1 className="text-3xl sm:text-[34px] font-medium tracking-tight leading-tight">
+          <h1 className="text-4xl sm:text-[38px] font-medium tracking-tight leading-tight">
             All signals <span className="serif-it text-accent">nominal.</span>
           </h1>
         </div>
@@ -204,27 +204,27 @@ export default function Overview() {
         }
       >
         {aiState.status === "idle" && (
-          <p className="text-[13px] text-mut leading-relaxed max-w-xl">
+          <p className="text-[15px] text-mut leading-relaxed max-w-xl">
             Get a concise summary of your GitHub and LeetCode activity — patterns, wins, and
             next steps powered by Gemini.
           </p>
         )}
         {aiState.status === "loading" && <LoadingPane label="consulting gemini" />}
         {aiState.status === "error" && (
-          <p className="text-[13px] text-rose font-mono py-2">{aiState.error}</p>
+          <p className="text-[15px] text-rose font-mono py-2">{aiState.error}</p>
         )}
         {aiState.status === "ready" && aiState.data && (
           <div className="flex flex-col gap-5 anim-rise">
             {aiState.data.cached && (
               <span className="microlabel text-faint">cached · refreshed every 24h</span>
             )}
-            <p className="text-[14px] text-ink leading-relaxed">{aiState.data.summary}</p>
+            <p className="text-[16px] text-ink leading-relaxed">{aiState.data.summary}</p>
             {aiState.data.highlights?.length > 0 && (
               <div className="flex flex-col gap-2">
                 <span className="microlabel text-faint">highlights</span>
                 <ul className="flex flex-col gap-1.5">
                   {aiState.data.highlights.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[13px] text-mut">
+                    <li key={i} className="flex items-start gap-2 text-[15px] text-mut">
                       <span className="text-accent mt-0.5">▸</span>
                       <span>{item}</span>
                     </li>
@@ -237,7 +237,7 @@ export default function Overview() {
                 <span className="microlabel text-faint">recommended next</span>
                 <ul className="flex flex-col gap-1.5">
                   {aiState.data.recommendations.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[13px] text-ink/90">
+                    <li key={i} className="flex items-start gap-2 text-[15px] text-ink/90">
                       <span className="text-lc mt-0.5">→</span>
                       <span>{item}</span>
                     </li>
@@ -262,7 +262,7 @@ export default function Overview() {
               />
               {gh.status === "loading" && <LoadingPane label="fetching github" />}
               {gh.status === "error" && (
-                <p className="text-[13px] text-rose font-mono py-6">{gh.error}</p>
+                <p className="text-[15px] text-rose font-mono py-6">{gh.error}</p>
               )}
               {gh.status === "ready" && (
                 <>
@@ -276,7 +276,7 @@ export default function Overview() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 py-2.5 group"
                       >
-                        <span className="font-mono text-[12px] text-ink group-hover:text-ghb transition-colors truncate">
+                        <span className="font-mono text-[14px] text-ink group-hover:text-ghb transition-colors truncate">
                           {r.name}
                         </span>
                         {r.language && (
@@ -285,7 +285,7 @@ export default function Overview() {
                             style={{ background: langColor(r.language) }}
                           />
                         )}
-                        <span className="ml-auto flex items-center gap-1 font-mono text-[11px] text-faint">
+                        <span className="ml-auto flex items-center gap-1 font-mono text-[13px] text-faint">
                           <Star size={10} /> {kfmt(r.stargazers_count)}
                         </span>
                       </a>
@@ -347,8 +347,8 @@ export default function Overview() {
                                 s.statusDisplay === "Accepted" ? "#2cbb5d" : "var(--color-rose)",
                             }}
                           />
-                          <span className="font-mono text-[12px] text-ink truncate">{s.title}</span>
-                          <span className="ml-auto font-mono text-[11px] text-faint shrink-0">
+                          <span className="font-mono text-[14px] text-ink truncate">{s.title}</span>
+                          <span className="ml-auto font-mono text-[13px] text-faint shrink-0">
                             {timeAgo(Number(s.timestamp) * 1000)}
                           </span>
                         </div>
@@ -358,7 +358,7 @@ export default function Overview() {
                 </>
               )}
               {lc.status === "error" && (
-                <p className="text-[13px] text-rose font-mono py-6">{lc.error}</p>
+                <p className="text-[15px] text-rose font-mono py-6">{lc.error}</p>
               )}
             </div>
           </Section>

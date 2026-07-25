@@ -46,7 +46,7 @@ export default function Navigation() {
           <Link to="/" className="md:hidden flex items-center">
             <BrandMark size={18} />
           </Link>
-          <span className="font-mono text-[13px] text-faint select-none truncate">
+          <span className="font-mono text-[15px] text-faint select-none truncate">
             ~<span className="text-line mx-1">/</span>
             <span className="text-ink">{section}</span>
             <span className="text-accent caret-blink ml-0.5">_</span>
@@ -54,14 +54,14 @@ export default function Navigation() {
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="hidden sm:inline font-mono text-[11px] text-faint tabular-nums select-none">
+          <span className="hidden sm:inline font-mono text-[13px] text-faint tabular-nums select-none">
             {clock} UTC
           </span>
           <span className="hidden sm:block w-px h-4 bg-line" />
           {user && (
             <div className="flex items-center gap-2.5">
               <span
-                className="flex items-center justify-center w-7 h-7 rounded-full border border-line bg-panel2 font-mono text-[11px] uppercase text-accent select-none"
+                className="flex items-center justify-center w-7 h-7 rounded-full border border-line bg-panel2 font-mono text-[13px] uppercase text-accent select-none"
                 title={user}
               >
                 {user.slice(0, 1)}

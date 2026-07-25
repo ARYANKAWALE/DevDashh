@@ -9,7 +9,7 @@ export default function NotFound() {
         <h1 className="font-mono text-[88px] leading-none font-medium tracking-tighter">
           4<span className="text-accent">0</span>4
         </h1>
-        <p className="text-[14px] text-mut max-w-xs leading-relaxed">
+        <p className="text-[16px] text-mut max-w-xs leading-relaxed">
           This path doesn't exist on the canvas.{" "}
           <span className="serif-it text-ink">Nothing but static here.</span>
         </p>

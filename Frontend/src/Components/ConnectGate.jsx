@@ -44,7 +44,7 @@ export function ConnectField({ platform, autoFocus = false, onConnected }) {
   return (
     <form onSubmit={submit} className="flex flex-col gap-2">
       <div className="flex items-stretch border border-line bg-bg/60 focus-within:border-faint transition-colors">
-        <span className="flex items-center pl-3 pr-1 font-mono text-[13px] text-faint select-none">@</span>
+        <span className="flex items-center pl-3 pr-1 font-mono text-[15px] text-faint select-none">@</span>
         <input
           autoFocus={autoFocus}
           value={value}
@@ -53,7 +53,7 @@ export function ConnectField({ platform, autoFocus = false, onConnected }) {
             setError("");
           }}
           placeholder={isGitHub ? "github username" : "leetcode username"}
-          className="flex-1 min-w-0 bg-transparent py-2.5 pr-2 font-mono text-[13px] text-ink outline-none"
+          className="flex-1 min-w-0 bg-transparent py-2.5 pr-2 font-mono text-[15px] text-ink outline-none"
           spellCheck={false}
         />
         <button
@@ -66,7 +66,7 @@ export function ConnectField({ platform, autoFocus = false, onConnected }) {
           {!busy && <ArrowRight size={11} strokeWidth={2.5} />}
         </button>
       </div>
-      {error && <p className="font-mono text-[11px] text-rose">{error}</p>}
+      {error && <p className="font-mono text-[13px] text-rose">{error}</p>}
     </form>
   );
 }
@@ -87,7 +87,7 @@ export function PlatformCard({ platform, delay = 0 }) {
           {isGitHub ? <GitHubMark size={17} /> : <LeetCodeMark size={17} />}
         </span>
         <div>
-          <h3 className="text-[15px] font-semibold leading-tight">
+          <h3 className="text-[17px] font-semibold leading-tight">
             {isGitHub ? "GitHub" : "LeetCode"}
           </h3>
           <p className="microlabel text-faint mt-0.5">
@@ -95,7 +95,7 @@ export function PlatformCard({ platform, delay = 0 }) {
           </p>
         </div>
       </div>
-      <p className="text-[13px] text-mut leading-relaxed">
+      <p className="text-[15px] text-mut leading-relaxed">
         {isGitHub
           ? "Pull your contribution graph, repository stats and language mix straight from your public profile."
           : "Track solved problems, difficulty split, acceptance rate and your daily submission rhythm."}
@@ -120,7 +120,7 @@ export default function ConnectGate() {
             <br />
             <span className="serif-it text-accent">on one canvas.</span>
           </h1>
-          <p className="text-[15px] text-mut max-w-lg leading-relaxed">
+          <p className="text-[17px] text-mut max-w-lg leading-relaxed">
             DevDash draws live signal from your public profiles. Link GitHub, LeetCode, or
             both — no passwords, no OAuth, just your username.
           </p>
@@ -159,7 +159,7 @@ export function PageGate({ platform }) {
             {isGitHub ? "GitHub" : "LeetCode"} isn't linked{" "}
             <span className="serif-it text-mut">yet.</span>
           </h1>
-          <p className="text-[13px] text-mut leading-relaxed">
+          <p className="text-[15px] text-mut leading-relaxed">
             Enter your {isGitHub ? "GitHub" : "LeetCode"} username and this page fills with
             live {isGitHub ? "repository and contribution data" : "problem-solving stats"}.
           </p>

@@ -8,10 +8,10 @@ export default function RouteError() {
     <div className="min-h-screen flex items-center justify-center px-6 bg-bg bg-dots text-ink">
       <div className="flex flex-col items-start gap-5 anim-rise">
         <span className="microlabel text-rose">runtime fault</span>
-        <h1 className="text-3xl font-medium tracking-tight">
+        <h1 className="text-4xl font-medium tracking-tight">
           Something <span className="serif-it text-rose">glitched.</span>
         </h1>
-        <p className="text-[13px] text-mut max-w-sm leading-relaxed font-mono">
+        <p className="text-[15px] text-mut max-w-sm leading-relaxed font-mono">
           {error?.message ?? "An unexpected error interrupted the render."}
         </p>
         <div className="flex gap-3">

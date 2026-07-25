@@ -64,8 +64,8 @@ export function BarRow({ label, value, max, color, valueText, delay = 0 }) {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-baseline justify-between gap-3">
-        <span className="text-[12px] text-mut">{label}</span>
-        <span className="font-mono text-[12px] text-ink">{valueText ?? value}</span>
+        <span className="text-[14px] text-mut">{label}</span>
+        <span className="font-mono text-[14px] text-ink">{valueText ?? value}</span>
       </div>
       <div className="h-[5px] bg-white/[0.05] overflow-hidden">
         <div
@@ -107,9 +107,9 @@ export function LanguageBar({ languages, limit = 6 }) {
                 className="w-2 h-2 rounded-full shrink-0"
                 style={{ background: l.name === "Other" ? "#4b4d57" : langColor(l.name) }}
               />
-              <span className="text-[12px] text-mut truncate">{l.name}</span>
+              <span className="text-[14px] text-mut truncate">{l.name}</span>
             </span>
-            <span className="font-mono text-[11px] text-faint">{l.pct.toFixed(1)}%</span>
+            <span className="font-mono text-[13px] text-faint">{l.pct.toFixed(1)}%</span>
           </li>
         ))}
       </ul>
@@ -124,7 +124,7 @@ export function DayBars({ days, color, height = 72 }) {
     <div className="flex items-end gap-[3px]" style={{ height }}>
       {days.map((d, i) => (
         <div key={i} className="flex-1 flex flex-col items-center justify-end h-full group relative">
-          <span className="absolute -top-5 opacity-0 group-hover:opacity-100 transition-opacity font-mono text-[10px] text-ink">
+          <span className="absolute -top-5 opacity-0 group-hover:opacity-100 transition-opacity font-mono text-[14px] text-ink">
             {d.count}
           </span>
           <div

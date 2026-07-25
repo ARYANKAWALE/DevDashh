@@ -47,7 +47,7 @@ export default function LeetCodePage() {
                 href={`https://leetcode.com/${u.username}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 font-mono text-[12px] text-lc hover:underline underline-offset-4"
+                className="flex items-center gap-1 font-mono text-[14px] text-lc hover:underline underline-offset-4"
               >
                 leetcode.com <ArrowUpRight size={11} />
               </a>
@@ -143,7 +143,7 @@ export default function LeetCodePage() {
                 }
               />
             ) : (
-              <p className="text-[13px] text-mut font-mono py-4">Calendar unavailable.</p>
+              <p className="text-[15px] text-mut font-mono py-4">Calendar unavailable.</p>
             )}
           </Section>
 
@@ -153,7 +153,7 @@ export default function LeetCodePage() {
             delay={200}
             aside={
               subs.length > 0 && (
-                <span className="font-mono text-[11px] text-faint">
+                <span className="font-mono text-[13px] text-faint">
                   {acceptedRecent}/{subs.length} accepted
                 </span>
               )
@@ -177,11 +177,11 @@ export default function LeetCodePage() {
                         }}
                         title={s.statusDisplay}
                       />
-                      <span className="font-mono text-[12px] text-ink group-hover:text-lc transition-colors truncate">
+                      <span className="font-mono text-[14px] text-ink group-hover:text-lc transition-colors truncate">
                         {s.title}
                       </span>
                       <span className="microlabel text-faint shrink-0">{s.lang}</span>
-                      <span className="ml-auto font-mono text-[11px] text-faint shrink-0">
+                      <span className="ml-auto font-mono text-[13px] text-faint shrink-0">
                         {timeAgo(Number(s.timestamp) * 1000)}
                       </span>
                     </a>
@@ -189,7 +189,7 @@ export default function LeetCodePage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-[13px] text-mut font-mono py-4">No recent submissions.</p>
+              <p className="text-[15px] text-mut font-mono py-4">No recent submissions.</p>
             )}
           </Section>
         </div>

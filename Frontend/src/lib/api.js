@@ -10,29 +10,60 @@
 
 const CACHE_PREFIX = "devdash.cache:";
 const DEFAULT_TTL = 10 * 60 * 1000; // 10 minutes
+const LC_TTL = 30 * 60 * 1000; // 30 minutes — proxy allows ~10 req / 15 min per IP
 
-export async function fetchJSON(url, { ttl = DEFAULT_TTL } = {}) {
-  const key = CACHE_PREFIX + url;
+function readCache(key) {
   try {
-    const hit = JSON.parse(sessionStorage.getItem(key));
-    if (hit && Date.now() - hit.t < ttl) return hit.d;
+    return JSON.parse(sessionStorage.getItem(key));
   } catch {
-    /* cache miss */
+    return null;
   }
+}
 
-  const res = await fetch(url);
-  if (!res.ok) {
-    const err = new Error(`Request failed (${res.status})`);
-    err.status = res.status;
-    throw err;
-  }
-  const data = await res.json();
+function writeCache(key, data) {
   try {
     sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), d: data }));
   } catch {
     /* quota exceeded — skip caching */
   }
-  return data;
+}
+
+export async function fetchJSON(url, { ttl = DEFAULT_TTL, staleOnError = false } = {}) {
+  const key = CACHE_PREFIX + url;
+  const hit = readCache(key);
+  if (hit && Date.now() - hit.t < ttl) return hit.d;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      if (staleOnError && hit?.d) return hit.d;
+      const err = new Error(`Request failed (${res.status})`);
+      err.status = res.status;
+      throw err;
+    }
+    const data = await res.json();
+    writeCache(key, data);
+    return data;
+  } catch (e) {
+    if (staleOnError && hit?.d) return hit.d;
+    if (e?.status) throw e;
+    const err = new Error("Network request failed");
+    err.offline = true;
+    throw err;
+  }
+}
+
+export function leetCodeErrorMessage(error) {
+  if (error?.status === 429) {
+    return "LeetCode data source is rate-limited (~10 requests per 15 min). Wait a minute and refresh.";
+  }
+  if (error?.offline) {
+    return "Couldn't reach LeetCode. Check your internet connection.";
+  }
+  if (error?.status >= 500) {
+    return "LeetCode data source is temporarily down. Try again in a few minutes.";
+  }
+  return "Couldn't reach LeetCode right now. The free proxy may be rate-limited — wait a minute and refresh.";
 }
 
 /* ── GitHub ─────────────────────────────────────────────── */
@@ -69,7 +100,10 @@ export async function validateGitHub(username) {
 
 export const lc = {
   profile: (u) =>
-    fetchJSON(`https://leetcode-api-faisalshohag.vercel.app/${encodeURIComponent(u)}`),
+    fetchJSON(`https://leetcode-api-faisalshohag.vercel.app/${encodeURIComponent(u)}`, {
+      ttl: LC_TTL,
+      staleOnError: true,
+    }),
 };
 
 /** Throws if the username doesn't exist on LeetCode. Returns the stats. */
@@ -78,9 +112,7 @@ export async function validateLeetCode(username) {
   try {
     data = await lc.profile(username);
   } catch (e) {
-    if (e.status === 429)
-      throw new Error("LeetCode data source is rate-limited right now. Try again in a minute.");
-    throw new Error("Couldn't reach LeetCode right now. Try again in a moment.");
+    throw new Error(leetCodeErrorMessage(e));
   }
   if (data?.totalSolved === undefined)
     throw new Error("LeetCode user not found. Check the username.");
