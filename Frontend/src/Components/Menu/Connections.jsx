@@ -22,7 +22,7 @@ function ConnectedRow({ icon, color, title, meta, href, onRemove }) {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-1.5 font-mono text-[13px] text-ink hover:underline underline-offset-4 truncate"
+          className="group flex items-center gap-1.5 font-mono text-[15px] text-ink hover:underline underline-offset-4 truncate"
         >
           {title}
           <ArrowUpRight size={11} className="text-faint group-hover:text-ink transition-colors" />
@@ -58,10 +58,10 @@ export default function Connections() {
     <div className="px-5 sm:px-8 py-8 max-w-[820px] mx-auto flex flex-col gap-6">
       <div className="flex flex-col gap-1.5 anim-rise">
         <span className="microlabel text-faint">04 — connections</span>
-        <h1 className="text-3xl font-medium tracking-tight leading-tight">
+        <h1 className="text-4xl font-medium tracking-tight leading-tight">
           Wire up your <span className="serif-it text-accent">signal sources.</span>
         </h1>
-        <p className="text-[13px] text-mut max-w-lg leading-relaxed mt-1">
+        <p className="text-[15px] text-mut max-w-lg leading-relaxed mt-1">
           One GitHub profile and one LeetCode profile — public data only, usernames, never
           passwords. When signed in, your linked profiles are stored on your account in
           MongoDB and follow you across devices.
@@ -95,7 +95,7 @@ export default function Connections() {
             />
           ) : (
             <>
-              <p className="text-[13px] text-mut">
+              <p className="text-[15px] text-mut">
                 Enter your GitHub username to pull contributions, repositories, languages and
                 activity.
               </p>
@@ -134,7 +134,7 @@ export default function Connections() {
             />
           ) : (
             <>
-              <p className="text-[13px] text-mut">
+              <p className="text-[15px] text-mut">
                 Enter your LeetCode username to track solved problems, ranking and submission
                 rhythm.
               </p>

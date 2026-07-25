@@ -9,7 +9,7 @@ export default function AuthShell({ tagline, children }) {
       <aside className="hidden lg:flex w-[42%] flex-col justify-between border-r border-line bg-dots p-10 xl:p-14">
         <Link to="/" className="flex items-center gap-2.5">
           <BrandMark size={22} />
-          <span className="font-mono text-[15px] font-semibold tracking-tight">
+          <span className="font-mono text-[17px] font-semibold tracking-tight">
             dev<span className="text-accent">dash</span>
           </span>
         </Link>
@@ -20,11 +20,11 @@ export default function AuthShell({ tagline, children }) {
             <br />
             <span className="serif-it text-accent">{tagline.flourish}</span>
           </h1>
-          <p className="text-[14px] text-mut max-w-sm leading-relaxed">{tagline.body}</p>
+          <p className="text-[16px] text-mut max-w-sm leading-relaxed">{tagline.body}</p>
 
           <div className="relative border border-line bg-panel/70 p-4 mt-2 max-w-sm">
             <Ticks />
-            <div className="flex flex-col gap-2.5 font-mono text-[11px]">
+            <div className="flex flex-col gap-2.5 font-mono text-[13px]">
               <span className="microlabel text-faint">supported signal</span>
               <span className="flex items-center gap-2.5 text-mut">
                 <span className="text-ghb">
@@ -53,7 +53,7 @@ export default function AuthShell({ tagline, children }) {
       <main className="flex-1 flex flex-col min-h-screen overflow-y-auto">
         <div className="lg:hidden flex items-center gap-2.5 px-6 h-14 border-b border-line">
           <BrandMark size={18} />
-          <span className="font-mono text-[14px] font-semibold tracking-tight">
+          <span className="font-mono text-[16px] font-semibold tracking-tight">
             dev<span className="text-accent">dash</span>
           </span>
         </div>
@@ -80,10 +80,10 @@ export function Field({ label, error, right, children }) {
       >
         {children}
       </div>
-      {error && <p className="font-mono text-[11px] text-rose">{error}</p>}
+      {error && <p className="font-mono text-[13px] text-rose">{error}</p>}
     </div>
   );
 }
 
 export const inputCls =
-  "flex-1 min-w-0 bg-transparent px-3.5 py-3 font-mono text-[13px] text-ink outline-none";
+  "flex-1 min-w-0 bg-transparent px-3.5 py-3 font-mono text-[15px] text-ink outline-none";

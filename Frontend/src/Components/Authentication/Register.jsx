@@ -115,7 +115,7 @@ export default function Register() {
         </div>
 
         {errors.api && (
-          <p className="border border-rose/40 bg-rose/5 px-3.5 py-2.5 font-mono text-[12px] text-rose">
+          <p className="border border-rose/40 bg-rose/5 px-3.5 py-2.5 font-mono text-[14px] text-rose">
             {errors.api}
           </p>
         )}
@@ -229,7 +229,7 @@ export default function Register() {
           <button
             type="submit"
             disabled={busy}
-            className="flex items-center justify-center gap-2 bg-accent text-bg font-semibold text-[13px] tracking-wide py-3.5 mt-1 hover:bg-accent-dim active:scale-[0.99] transition-all disabled:opacity-60"
+            className="flex items-center justify-center gap-2 bg-accent text-bg font-semibold text-[15px] tracking-wide py-3.5 mt-1 hover:bg-accent-dim active:scale-[0.99] transition-all disabled:opacity-60"
           >
             {busy ? (
               <Spinner size={15} className="!border-black/30 !border-t-black" />
@@ -241,7 +241,7 @@ export default function Register() {
           </button>
         </form>
 
-        <p className="text-[13px] text-mut">
+        <p className="text-[15px] text-mut">
           Already registered?{" "}
           <Link to="/login" className="text-accent hover:underline underline-offset-4">
             Sign in

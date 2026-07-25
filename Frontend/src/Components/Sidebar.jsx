@@ -17,7 +17,7 @@ function StatusRow({ connected, icon, label, color }) {
         style={{ background: connected ? color : "rgba(255,255,255,0.15)" }}
       />
       <span className="text-faint">{icon}</span>
-      <span className={`font-mono text-[11px] truncate ${connected ? "text-mut" : "text-faint"}`}>
+      <span className={`font-mono text-[13px] truncate ${connected ? "text-mut" : "text-faint"}`}>
         {label}
       </span>
     </div>
@@ -33,7 +33,7 @@ export default function Sidebar() {
       <div>
         <Link to="/" className="flex items-center gap-2.5 px-5 h-14 border-b border-line">
           <BrandMark size={20} />
-          <span className="font-mono text-[14px] font-semibold tracking-tight">
+          <span className="font-mono text-[16px] font-semibold tracking-tight">
             dev<span className="text-accent">dash</span>
           </span>
         </Link>
@@ -60,7 +60,7 @@ export default function Sidebar() {
                         style={{ background: "var(--color-accent)" }}
                       />
                       <span className="microlabel text-faint w-5">{index}</span>
-                      <span className="text-[13px] font-medium tracking-wide">{label}</span>
+                      <span className="text-[15px] font-medium tracking-wide">{label}</span>
                       {dot && (
                         <span
                           className="ml-auto w-1.5 h-1.5 rounded-full opacity-70"

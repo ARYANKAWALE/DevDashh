@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { lc } from "../lib/api";
+import { lc, leetCodeErrorMessage } from "../lib/api";
 import { useConnections } from "../lib/connections";
 
 /** Builds 364 day-cells (52 weeks) from a LeetCode submission calendar. */
@@ -81,10 +81,7 @@ export function useLeetCodeData() {
         if (!alive) return;
         setState({
           status: "error",
-          error:
-            e.status === 429
-              ? "LeetCode data source is rate-limited right now. Try again in a minute."
-              : "Couldn't reach LeetCode right now. Try again in a moment.",
+          error: leetCodeErrorMessage(e),
           user: null,
         });
       }

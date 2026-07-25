@@ -1,10 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, Star } from "lucide-react";
+import { ArrowUpRight, Sparkles, Star } from "lucide-react";
 import { useConnections } from "../../lib/connections";
 import { useGitHubData } from "../../hooks/useGitHubData";
 import { useLeetCodeData } from "../../hooks/useLeetCodeData";
 import { fmt, kfmt, timeAgo, langColor } from "../../lib/api";
+import { buildInsightsStats, fetchInsights } from "../../lib/ai";
 import ConnectGate, { PlatformCard } from "../ConnectGate";
 import Heatmap, { GH_PALETTE, LC_PALETTE, HeatmapLegend } from "../ui/Heatmap";
 import { BarRow, LanguageBar } from "../ui/Charts";
@@ -60,6 +61,7 @@ export default function Overview() {
   const { github, leetcode } = useConnections();
   const gh = useGitHubData();
   const lc = useLeetCodeData();
+  const [aiState, setAiState] = useState({ status: "idle", error: null, data: null });
 
   const nothingConnected = !github && !leetcode;
 
@@ -67,6 +69,25 @@ export default function Overview() {
     () => (gh.cells || lc.cells ? mergeCells(gh.cells, lc.cells) : null),
     [gh.cells, lc.cells]
   );
+
+  const dataReady =
+    (!github || gh.status === "ready" || gh.status === "error") &&
+    (!leetcode || (!lc.loading && (lc.user || lc.status === "error")));
+
+  async function handleGenerateInsights() {
+    setAiState({ status: "loading", error: null, data: null });
+    try {
+      const stats = buildInsightsStats({ github, leetcode, gh, lc });
+      const insights = await fetchInsights(stats);
+      setAiState({ status: "ready", error: null, data: insights });
+    } catch (e) {
+      setAiState({
+        status: "error",
+        error: e.message ?? "Couldn't generate insights. Try again.",
+        data: null,
+      });
+    }
+  }
 
   if (nothingConnected) return <ConnectGate />;
 
@@ -105,7 +126,7 @@ export default function Overview() {
       <div className="flex flex-wrap items-end justify-between gap-4 anim-rise">
         <div className="flex flex-col gap-1.5">
           <span className="microlabel text-faint">{today}</span>
-          <h1 className="text-3xl sm:text-[34px] font-medium tracking-tight leading-tight">
+          <h1 className="text-4xl sm:text-[38px] font-medium tracking-tight leading-tight">
             All signals <span className="serif-it text-accent">nominal.</span>
           </h1>
         </div>
@@ -165,6 +186,69 @@ export default function Overview() {
         )}
       </Section>
 
+      {/* AI insights */}
+      <Section
+        index="✦"
+        title="ai briefing — personalized insights"
+        delay={150}
+        aside={
+          <button
+            type="button"
+            onClick={handleGenerateInsights}
+            disabled={!dataReady || aiState.status === "loading"}
+            className="flex items-center gap-1.5 microlabel text-accent hover:text-ink disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            <Sparkles size={12} />
+            {aiState.status === "loading" ? "generating…" : "generate insights"}
+          </button>
+        }
+      >
+        {aiState.status === "idle" && (
+          <p className="text-[15px] text-mut leading-relaxed max-w-xl">
+            Get a concise summary of your GitHub and LeetCode activity — patterns, wins, and
+            next steps powered by Gemini.
+          </p>
+        )}
+        {aiState.status === "loading" && <LoadingPane label="consulting gemini" />}
+        {aiState.status === "error" && (
+          <p className="text-[15px] text-rose font-mono py-2">{aiState.error}</p>
+        )}
+        {aiState.status === "ready" && aiState.data && (
+          <div className="flex flex-col gap-5 anim-rise">
+            {aiState.data.cached && (
+              <span className="microlabel text-faint">cached · refreshed every 24h</span>
+            )}
+            <p className="text-[16px] text-ink leading-relaxed">{aiState.data.summary}</p>
+            {aiState.data.highlights?.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <span className="microlabel text-faint">highlights</span>
+                <ul className="flex flex-col gap-1.5">
+                  {aiState.data.highlights.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-[15px] text-mut">
+                      <span className="text-accent mt-0.5">▸</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {aiState.data.recommendations?.length > 0 && (
+              <div className="flex flex-col gap-2 border-t border-linesoft pt-4">
+                <span className="microlabel text-faint">recommended next</span>
+                <ul className="flex flex-col gap-1.5">
+                  {aiState.data.recommendations.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-[15px] text-ink/90">
+                      <span className="text-lc mt-0.5">→</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+      </Section>
+
       {/* platform briefings */}
       <div className="grid lg:grid-cols-2 gap-6 items-start">
         {github ? (
@@ -178,7 +262,7 @@ export default function Overview() {
               />
               {gh.status === "loading" && <LoadingPane label="fetching github" />}
               {gh.status === "error" && (
-                <p className="text-[13px] text-rose font-mono py-6">{gh.error}</p>
+                <p className="text-[15px] text-rose font-mono py-6">{gh.error}</p>
               )}
               {gh.status === "ready" && (
                 <>
@@ -192,7 +276,7 @@ export default function Overview() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 py-2.5 group"
                       >
-                        <span className="font-mono text-[12px] text-ink group-hover:text-ghb transition-colors truncate">
+                        <span className="font-mono text-[14px] text-ink group-hover:text-ghb transition-colors truncate">
                           {r.name}
                         </span>
                         {r.language && (
@@ -201,7 +285,7 @@ export default function Overview() {
                             style={{ background: langColor(r.language) }}
                           />
                         )}
-                        <span className="ml-auto flex items-center gap-1 font-mono text-[11px] text-faint">
+                        <span className="ml-auto flex items-center gap-1 font-mono text-[13px] text-faint">
                           <Star size={10} /> {kfmt(r.stargazers_count)}
                         </span>
                       </a>
@@ -263,8 +347,8 @@ export default function Overview() {
                                 s.statusDisplay === "Accepted" ? "#2cbb5d" : "var(--color-rose)",
                             }}
                           />
-                          <span className="font-mono text-[12px] text-ink truncate">{s.title}</span>
-                          <span className="ml-auto font-mono text-[11px] text-faint shrink-0">
+                          <span className="font-mono text-[14px] text-ink truncate">{s.title}</span>
+                          <span className="ml-auto font-mono text-[13px] text-faint shrink-0">
                             {timeAgo(Number(s.timestamp) * 1000)}
                           </span>
                         </div>
@@ -274,7 +358,7 @@ export default function Overview() {
                 </>
               )}
               {lc.status === "error" && (
-                <p className="text-[13px] text-rose font-mono py-6">{lc.error}</p>
+                <p className="text-[15px] text-rose font-mono py-6">{lc.error}</p>
               )}
             </div>
           </Section>

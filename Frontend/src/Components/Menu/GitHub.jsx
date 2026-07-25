@@ -62,12 +62,12 @@ export default function GitHubPage() {
               href={p.html_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 font-mono text-[12px] text-ghb hover:underline underline-offset-4"
+              className="flex items-center gap-1.5 font-mono text-[14px] text-ghb hover:underline underline-offset-4"
             >
               <GitHubMark size={12} /> @{p.login} <ArrowUpRight size={11} />
             </a>
           </div>
-          {p.bio && <p className="text-[13px] text-mut max-w-xl">{p.bio}</p>}
+          {p.bio && <p className="text-[15px] text-mut max-w-xl">{p.bio}</p>}
           <div className="flex flex-wrap items-center gap-4 mt-1 microlabel text-faint">
             {p.location && (
               <span className="flex items-center gap-1">
@@ -129,7 +129,7 @@ export default function GitHubPage() {
             }
           />
         ) : (
-          <p className="text-[13px] text-mut font-mono py-4">
+          <p className="text-[15px] text-mut font-mono py-4">
             Contribution calendar unavailable right now.
           </p>
         )}
@@ -141,7 +141,7 @@ export default function GitHubPage() {
           {gh.languages.length > 0 ? (
             <LanguageBar languages={gh.languages} limit={7} />
           ) : (
-            <p className="text-[13px] text-mut font-mono py-4">No language data yet.</p>
+            <p className="text-[15px] text-mut font-mono py-4">No language data yet.</p>
           )}
         </Section>
 
@@ -151,7 +151,7 @@ export default function GitHubPage() {
           title="push cadence — last 14 days"
           delay={200}
           aside={
-            <span className="font-mono text-[11px] text-faint">
+            <span className="font-mono text-[13px] text-faint">
               {pushes.reduce((s, d) => s + d.count, 0)} commits
             </span>
           }
@@ -191,7 +191,7 @@ export default function GitHubPage() {
                 className="group bg-panel hover:bg-panel2 transition-colors p-4 flex flex-col gap-2 min-w-0"
               >
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-[13px] text-ink group-hover:text-ghb transition-colors truncate">
+                  <span className="font-mono text-[15px] text-ink group-hover:text-ghb transition-colors truncate">
                     {r.name}
                   </span>
                   <ArrowUpRight
@@ -200,7 +200,7 @@ export default function GitHubPage() {
                   />
                 </div>
                 {r.description && (
-                  <p className="text-[12px] text-mut leading-relaxed line-clamp-2">
+                  <p className="text-[14px] text-mut leading-relaxed line-clamp-2">
                     {r.description}
                   </p>
                 )}
@@ -226,7 +226,7 @@ export default function GitHubPage() {
             ))}
           </div>
         ) : (
-          <p className="text-[13px] text-mut font-mono py-4">No public repositories.</p>
+          <p className="text-[15px] text-mut font-mono py-4">No public repositories.</p>
         )}
       </Section>
 
@@ -236,16 +236,16 @@ export default function GitHubPage() {
           <ul className="flex flex-col divide-y divide-linesoft">
             {gh.feed.map((f, i) => (
               <li key={i} className="flex items-baseline gap-3 py-2.5 min-w-0">
-                <span className="font-mono text-[11px] text-faint w-16 shrink-0">
+                <span className="font-mono text-[13px] text-faint w-16 shrink-0">
                   {timeAgo(f.at)}
                 </span>
-                <p className="text-[13px] text-mut truncate">
+                <p className="text-[15px] text-mut truncate">
                   <span className="text-ink">{f.verb}</span>
-                  {f.detail && <span className="font-mono text-[12px]"> “{f.detail}”</span>}
+                  {f.detail && <span className="font-mono text-[14px]"> “{f.detail}”</span>}
                   {f.repo && (
                     <span className="text-faint">
                       {" "}
-                      in <span className="font-mono text-[12px] text-mut">{f.repo}</span>
+                      in <span className="font-mono text-[14px] text-mut">{f.repo}</span>
                     </span>
                   )}
                 </p>
@@ -253,7 +253,7 @@ export default function GitHubPage() {
             ))}
           </ul>
         ) : (
-          <p className="text-[13px] text-mut font-mono py-4">No recent public activity.</p>
+          <p className="text-[15px] text-mut font-mono py-4">No recent public activity.</p>
         )}
       </Section>
     </div>

@@ -78,12 +78,12 @@ export function StatBlock({ label, value, sub, accent, animate = true }) {
     <div className="flex flex-col gap-1.5 min-w-0">
       <span className="microlabel text-faint">{label}</span>
       <span
-        className="font-mono text-[26px] leading-none font-medium tracking-tight truncate"
+        className="font-mono text-[30px] leading-none font-medium tracking-tight truncate"
         style={accent ? { color: accent } : undefined}
       >
         {animate && typeof value === "number" ? <CountUp value={value} /> : value ?? "—"}
       </span>
-      {sub && <span className="text-[11px] text-mut truncate">{sub}</span>}
+      {sub && <span className="text-[15px] text-mut truncate">{sub}</span>}
     </div>
   );
 }
@@ -120,7 +120,7 @@ export function ErrorPane({ message }) {
   return (
     <div className="flex flex-col items-center justify-center gap-2 py-24 anim-fade">
       <span className="microlabel text-rose">signal lost</span>
-      <p className="text-sm text-mut max-w-sm text-center">{message}</p>
+      <p className="text-base text-mut max-w-sm text-center">{message}</p>
     </div>
   );
 }

@@ -100,7 +100,7 @@ export default function Heatmap({ cells, colorFor, tooltipFor }) {
 
       {tip && (
         <div
-          className="absolute z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] px-2.5 py-1.5 bg-panel3 border border-line text-[11px] font-mono text-ink whitespace-nowrap pointer-events-none shadow-xl"
+          className="absolute z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] px-2.5 py-1.5 bg-panel3 border border-line text-[13px] font-mono text-ink whitespace-nowrap pointer-events-none shadow-xl"
           style={{ left: tip.x, top: tip.y }}
         >
           {tip.text}
