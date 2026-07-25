@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import { DBConnnet } from "./src/db/index.js";
 import userRouter from "./src/routes/user.routes.js";
+import aiRouter from "./src/routes/ai.routes.js";
 import { ApiError } from "./src/utils/ApiError.js";
 import { PRODUCTION_API_URL } from "./src/utils/constants.js";
 
@@ -53,6 +54,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/ai", aiRouter);
 
 // unknown route
 app.use((req, _res, next) => {
