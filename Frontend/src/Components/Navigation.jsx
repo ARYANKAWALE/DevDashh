@@ -11,13 +11,13 @@ const PATH_NAMES = {
   "/connections": "connections",
 };
 
-function useUtcClock() {
+function useISTClock() {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
-  return now.toISOString().slice(11, 19);
+  return now.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
 }
 
 function getUser() {
@@ -27,7 +27,7 @@ function getUser() {
 export default function Navigation() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const clock = useUtcClock();
+  const clock = useISTClock();
   const [user, setUser] = useState(getUser);
 
   const section = PATH_NAMES[pathname] ?? "404";
@@ -55,7 +55,7 @@ export default function Navigation() {
 
         <div className="flex items-center gap-4">
           <span className="hidden sm:inline font-mono text-[13px] text-faint tabular-nums select-none">
-            {clock} UTC
+            {clock} IST
           </span>
           <span className="hidden sm:block w-px h-4 bg-line" />
           {user && (
