@@ -34,7 +34,7 @@ function ConnectedRow({ icon, color, title, meta, href, onRemove }) {
         className="ml-auto flex items-center gap-1.5 microlabel text-faint hover:text-rose transition-colors shrink-0"
         title="Disconnect"
       >
-        <Unlink size={12} />
+        <Unlink size={12}  className="hover:cursor-pointer"/>
         unlink
       </button>
     </div>
