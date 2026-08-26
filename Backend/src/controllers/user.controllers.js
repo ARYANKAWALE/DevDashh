@@ -1,4 +1,6 @@
+import crypto from "crypto";
 import { User } from "../models/user.models.js";
+import { PasswordResetToken } from "../models/passwordResetToken.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -106,4 +108,87 @@ export const updateConnections = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, { user: req.user.toPublic() }, "Connections saved"));
+});
+
+/* POST /api/v1/users/forgotpassword */
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body ?? {};
+  if (!email?.trim()) {
+    throw new ApiError(400, "Email is required");
+  }
+
+  // Always respond 200 so we don't leak whether an email is registered.
+  const user = await User.findOne({ email: email.trim().toLowerCase() });
+  if (!user) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "If that email exists, a reset link has been sent"));
+  }
+
+  // Generate a random token, store only its hash.
+  const rawToken = crypto.randomBytes(32).toString("hex");
+  const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+  // Replace any existing token for this user (one active token at a time).
+  await PasswordResetToken.deleteMany({ userId: user._id });
+  await PasswordResetToken.create({ userId: user._id, tokenHash });
+
+  // Build the reset URL pointing at the frontend.
+  const clientOrigin =
+    process.env.CORS_ORIGIN?.replace(/\/$/, "") || "http://localhost:5173";
+  const resetUrl = `${clientOrigin}/reset-password?token=${rawToken}`;
+
+  
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { resetUrl },
+        "Reset link generated (no mailer configured — link returned for development)"
+      )
+    );
+});
+
+/* POST /api/v1/users/resetpassword */
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { token, newPassword } = req.body ?? {};
+
+  if (!token || !newPassword) {
+    throw new ApiError(400, "Token and new password are required");
+  }
+  if (newPassword.length < 6) {
+    throw new ApiError(400, "Password must be at least 6 characters");
+  }
+
+  // Hash the incoming raw token to look up the stored record.
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+  const record = await PasswordResetToken.findOne({ tokenHash });
+
+  if (!record) {
+    throw new ApiError(400, "Reset link is invalid or has expired");
+  }
+
+  const user = await User.findById(record.userId).select("+password");
+  if (!user) {
+    throw new ApiError(400, "Reset link is invalid or has expired");
+  }
+
+  const isSamePassword = await user.isPasswordCorrect(newPassword)
+
+  if(isSamePassword){
+    throw new ApiError(400, "New password cannot be same as old password");
+  }
+
+
+  user.password = newPassword;
+  await user.save();
+
+  // Invalidate the token so it can't be reused.
+  await PasswordResetToken.deleteOne({ _id: record._id });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, sessionPayload(user), "Password updated — you are now signed in"));
 });

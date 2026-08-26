@@ -9,6 +9,8 @@ import LeetCodePage from "./Components/Menu/LeetCode.jsx";
 import Connections from "./Components/Menu/Connections.jsx";
 import Login from "./Components/Authentication/Login.jsx";
 import Register from "./Components/Authentication/Register.jsx";
+import ForgotPassword from "./Components/Authentication/ForgotPassword.jsx";
+
 import NotFound from "./NotFound.jsx";
 import RouteError from "./RouteError.jsx";
 import RequireAuth from "./Components/RequireAuth.jsx";
@@ -32,6 +34,19 @@ const router = createBrowserRouter([
       </GuestRoute>
     ),
     errorElement: <RouteError />,
+  },
+  {
+    path: "/forgot-password",
+    element: (
+      <GuestRoute>
+        <ForgotPassword />
+      </GuestRoute>
+    ),
+    errorElement: <RouteError />,
+  },
+  {
+    path: "/reset-password",
+    element: <Navigate to="/forgot-password" replace />,
   },
   {
     path: "/",

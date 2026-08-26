@@ -93,9 +93,9 @@ export default function Login() {
             label="password"
             error={errors.password}
             right={
-              <a href="#forgot" className="microlabel text-faint hover:text-mut transition-colors">
+              <Link to="/forgot-password" className="microlabel text-faint hover:text-mut transition-colors">
                 forgot?
-              </a>
+              </Link>
             }
           >
             <input
