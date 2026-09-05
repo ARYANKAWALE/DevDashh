@@ -2,7 +2,7 @@
  * Data sources (all public, no tokens):
  *  - GitHub REST      https://api.github.com
  *  - GitHub calendar  https://github-contributions-api.jogruber.de
- *  - LeetCode proxy   https://leetcode-api-faisalshohag.vercel.app
+ *  - LeetCode proxy   https://alfa-leetcode-api.onrender.com
  *
  * Every response is cached in sessionStorage for a short TTL so navigating
  * between pages doesn't burn through GitHub's unauthenticated rate limit.
@@ -10,7 +10,7 @@
 
 const CACHE_PREFIX = "devdash.cache:";
 const DEFAULT_TTL = 10 * 60 * 1000; // 10 minutes
-const LC_TTL = 30 * 60 * 1000; // 30 minutes — proxy allows ~10 req / 15 min per IP
+const LC_TTL = 5 * 60 * 1000; // 5 minutes — alfa-leetcode-api has no strict rate limits
 
 function readCache(key) {
   try {
@@ -55,7 +55,7 @@ export async function fetchJSON(url, { ttl = DEFAULT_TTL, staleOnError = false }
 
 export function leetCodeErrorMessage(error) {
   if (error?.status === 429) {
-    return "LeetCode data source is rate-limited (~10 requests per 15 min). Wait a minute and refresh.";
+    return "LeetCode data source is temporarily rate-limited. Wait a moment and refresh.";
   }
   if (error?.offline) {
     return "Couldn't reach LeetCode. Check your internet connection.";
@@ -63,7 +63,7 @@ export function leetCodeErrorMessage(error) {
   if (error?.status >= 500) {
     return "LeetCode data source is temporarily down. Try again in a few minutes.";
   }
-  return "Couldn't reach LeetCode right now. The free proxy may be rate-limited — wait a minute and refresh.";
+  return "Couldn't reach LeetCode right now. Try refreshing in a moment.";
 }
 
 /* ── GitHub ─────────────────────────────────────────────── */
@@ -98,9 +98,11 @@ export async function validateGitHub(username) {
 
 /* ── LeetCode ───────────────────────────────────────────── */
 
+const LC_BASE = "https://alfa-leetcode-api.onrender.com";
+
 export const lc = {
   profile: (u) =>
-    fetchJSON(`https://leetcode-api-faisalshohag.vercel.app/${encodeURIComponent(u)}`, {
+    fetchJSON(`${LC_BASE}/${encodeURIComponent(u)}/profile`, {
       ttl: LC_TTL,
       staleOnError: true,
     }),

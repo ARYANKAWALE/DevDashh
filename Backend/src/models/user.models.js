@@ -35,6 +35,8 @@ const userSchema = new mongoose.Schema(
     githubUsername: { type: String, trim: true, default: null },
     /** Public LeetCode handle — one profile per account. */
     leetcodeUsername: { type: String, trim: true, default: null },
+    /** Public LinkedIn handle — one profile per account. */
+    linkedInUsername: { type: String, trim: true, default: null },
   },
   { timestamps: true }
 );

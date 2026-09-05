@@ -111,7 +111,7 @@ export default function ConnectGate() {
     <div className="min-h-full flex items-center justify-center px-6 py-16 bg-dots">
       <div className="w-full max-w-3xl flex flex-col gap-10">
         <div className="flex flex-col gap-5 anim-rise">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 ">
             <BrandMark size={26} />
             <span className="microlabel text-faint">devdash / 00 — link an account</span>
           </div>

@@ -86,7 +86,7 @@ export default function Heatmap({ cells, colorFor, tooltipFor }) {
                 return (
                   <span
                     key={ri}
-                    className="rounded-[2px] transition-transform duration-100 hover:scale-[1.35] hover:outline hover:outline-1 hover:outline-white/40"
+                    className="rounded-[2px] cursor-pointer transition-transform duration-100 hover:scale-[1.35] hover:outline hover:outline-1 hover:outline-white/40"
                     style={{ width: CELL, height: CELL, background: colorFor(cell) }}
                     onMouseEnter={(e) => showTip(e, cell)}
                     onMouseLeave={() => setTip(null)}
